@@ -1,6 +1,7 @@
 @import "./variables.scss";
 
 .app {
+  font-family: sans-serif;
   &__header {
     text-align: center;
   }
@@ -34,10 +35,24 @@
   border: 1px solid black;
   background: blue;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  &__row {
+    display: flex;
+    &__odd {
+      flex-direction: row-reverse;
+    }
+  }
   &__step {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0.15rem;
     width: 50px;
     height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 900;
     &__red {
       background: red;
     }
@@ -46,32 +61,34 @@
     }
   }
 
-  @include tabletAndUp {
-    width: 700px;
-    height: 700px;
-    &__step {
-      width: 70px;
-      height: 70px;
-    }
-  }
+  // @include tabletAndUp {
+  //   width: 700px;
+  //   height: 700px;
+  //   &__step {
+  //     width: 70px;
+  //     height: 70px;
+  //     font-size: 1.75rem;
+  //   }
+  // }
 
-  @include desktopAndUp {
-    width: 650px;
-    height: 650px;
-    &__step {
-      width: 65px;
-      height: 65px;
-    }
-  }
+  // @include desktopAndUp {
+  //   width: 650px;
+  //   height: 650px;
+  //   &__step {
+  //     width: 65px;
+  //     height: 65px;
+  //   }
+  // }
 
-  @include largeDesktopAndUp {
-    width: 800px;
-    height: 800px;
-    &__step {
-      width: 80px;
-      height: 80px;
-    }
-  }
+  // @include largeDesktopAndUp {
+  //   width: 800px;
+  //   height: 800px;
+  //   &__step {
+  //     width: 80px;
+  //     height: 80px;
+  //     font-size: 2.5rem;
+  //   }
+  // }
 }
 
 .tools {
@@ -89,5 +106,101 @@
   &__players,
   &__history {
     width: 100%;
+  }
+}
+
+.ladder {
+  position: absolute;
+  img {
+    width: 50px;
+  }
+}
+
+// ladder 1 mobile
+.ladder-1 {
+  bottom: 20%;
+  left: 100%;
+  transform: rotate(33deg);
+  z-index: 999;
+
+  img {
+    width: 50px;
+    height: 160px;
+  }
+}
+
+.ladder-4 {
+  bottom: -50%;
+  left: 160%;
+  transform: rotate(70deg);
+  z-index: 999;
+  img {
+    height: 140px;
+  }
+}
+
+.ladder-8 {
+  bottom: 10%;
+  left: 100%;
+  transform: rotate(45deg);
+  z-index: 999;
+  img {
+    height: 120px;
+  }
+}
+
+.ladder-21 {
+  bottom: 50%;
+  left: 50%;
+  transform: rotate(25deg);
+  z-index: 999;
+  img {
+    height: 90px;
+  }
+}
+
+.ladder-28 {
+  bottom: -45%;
+  left: -249%;
+  transform: rotate(-45deg);
+  z-index: 999;
+  background: url("./assets/ladder.png");
+  background-repeat: repeat-y;
+  background-size: 100% 33.3%;
+  height: 330px;
+  width: 50px;
+  img {
+    height: 330px;
+    display: none;
+  }
+}
+
+.ladder-50 {
+  bottom: -20%;
+  left: -136%;
+  transform: rotate(-53deg);
+  z-index: 999;
+  img {
+    height: 165px;
+  }
+}
+
+.ladder-71 {
+  bottom: 55%;
+  left: -50%;
+  transform: rotate(-24deg);
+  z-index: 999;
+  img {
+    height: 85px;
+  }
+}
+
+.ladder-80 {
+  bottom: 55%;
+  left: 50%;
+  transform: rotate(24deg);
+  z-index: 999;
+  img {
+    height: 85px;
   }
 }

@@ -1,0 +1,93 @@
+@import "./variables.scss";
+
+.app {
+  &__header {
+    text-align: center;
+  }
+
+  &__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: column-reverse;
+    width: 100%;
+    @include desktopAndUp {
+      flex-direction: row;
+    }
+  }
+}
+
+.board {
+  &__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 0;
+    @include desktopAndUp {
+      width: 65%;
+    }
+  }
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  background: blue;
+  display: flex;
+  flex-wrap: wrap;
+  &__step {
+    width: 50px;
+    height: 50px;
+    &__red {
+      background: red;
+    }
+    &__white {
+      background: white;
+    }
+  }
+
+  @include tabletAndUp {
+    width: 700px;
+    height: 700px;
+    &__step {
+      width: 70px;
+      height: 70px;
+    }
+  }
+
+  @include desktopAndUp {
+    width: 650px;
+    height: 650px;
+    &__step {
+      width: 65px;
+      height: 65px;
+    }
+  }
+
+  @include largeDesktopAndUp {
+    width: 800px;
+    height: 800px;
+    &__step {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}
+
+.tools {
+  width: 100%;
+  @include desktopAndUp {
+    width: 35%;
+  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: yellow;
+  flex-wrap: wrap;
+
+  &__current,
+  &__players,
+  &__history {
+    width: 100%;
+  }
+}

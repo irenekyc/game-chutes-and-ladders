@@ -53,6 +53,10 @@
     align-items: center;
     font-size: 1.5rem;
     font-weight: 900;
+    span {
+      display: block;
+      z-index: 1000;
+    }
     &__red {
       background: red;
     }
@@ -202,5 +206,89 @@
   z-index: 999;
   img {
     height: 85px;
+  }
+}
+
+.snake {
+  position: absolute;
+  img {
+    width: 30px;
+  }
+}
+
+.snake-32 {
+  top: 50%;
+  left: 30%;
+  z-index: 1000;
+  transform: rotate(10deg);
+  img {
+    width: 80px;
+    height: 150px;
+  }
+}
+
+.snake-36 {
+  top: 50%;
+  left: 30%;
+  z-index: 1000;
+  transform: rotate(10deg);
+  img {
+    width: 80px;
+    height: 150px;
+  }
+}
+
+.snake-48 {
+  top: 30%;
+  left: -135%;
+  z-index: 1000;
+  transform: rotate(78deg);
+  img {
+    width: 80px;
+    height: 110px;
+  }
+}
+
+.snake-62 {
+  top: 50%;
+  left: 24%;
+  z-index: 1000;
+  transform: rotate(10deg);
+  img {
+    width: 100px;
+    height: 250px;
+  }
+}
+
+.snake-88 {
+  top: -20%;
+  left: -270%;
+  z-index: 1000;
+  transform: rotate(50deg);
+  img {
+    width: 120px;
+    height: 360px;
+  }
+}
+
+.snake-95 {
+  top: 45%;
+  left: -100%;
+  z-index: 1000;
+  transform: rotate(40deg);
+  img {
+    width: 80px;
+    height: 210px;
+  }
+}
+
+.snake-97 {
+  top: 45%;
+  left: -62%;
+  z-index: 1000;
+  transform: rotate(60deg);
+  img {
+    width: 80px;
+    height: 100px;
   }
 }

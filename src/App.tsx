@@ -1,6 +1,8 @@
 import "./index.scss";
 import ladder from "./assets/ladder.png";
+import snake from "./assets/snake.svg";
 const stepWithLadder = [1, 4, 8, 21, 28, 50, 71, 80];
+const stepWithSnakes = [32, 36, 48, 62, 88, 95, 97];
 
 function App() {
   return (
@@ -31,10 +33,15 @@ function App() {
                       key={number}
                       data-step={number}
                     >
-                      {number}
+                      <span>{number}</span>
                       {stepWithLadder.includes(parseInt(number)) && (
                         <div className={`ladder ladder-${number}`}>
                           <img src={ladder} alt="ladder" />
+                        </div>
+                      )}
+                      {stepWithSnakes.includes(parseInt(number)) && (
+                        <div className={`snake snake-${number}`}>
+                          <img src={snake} alt="snake" />
                         </div>
                       )}
                     </div>

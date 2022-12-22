@@ -5,7 +5,7 @@
   &__header {
     text-align: center;
     h1 {
-      font-size: 3rem;
+      font-size: 2rem;
     }
   }
 
@@ -300,7 +300,11 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
+    align-items: center;
 
+    span {
+      margin-right: 0.75rem;
+    }
     &__player {
       display: flex;
       flex-direction: column;
@@ -337,6 +341,31 @@
         &.purple {
           background: purple;
         }
+      }
+    }
+  }
+}
+
+.tools {
+  &__players {
+    margin: 2rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    &__dice {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &__div {
+        margin-left: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

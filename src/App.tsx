@@ -8,6 +8,7 @@ import cat from "./assets/pieces/piece_cat.png";
 import hat from "./assets/pieces/piece_hat.png";
 import shoe from "./assets/pieces/piece_shoe.png";
 import wheelbarrow from "./assets/pieces/piece_wheelbarrow.png";
+import { BsFillDice1Fill } from "react-icons/bs";
 
 const stepWithLadder = [1, 4, 8, 21, 28, 50, 71, 80];
 const stepWithSnakes = [32, 36, 48, 62, 88, 95, 97];
@@ -63,11 +64,7 @@ function App() {
         </div>
         <div className="tools">
           <div className="tools__current">
-            <div className="tools__current__player">
-              <img src={battleship} alt="" />
-              <div className="tools__current__player__colorcode brown"></div>
-              <div className="tools__current__player__name">Anuraag</div>
-            </div>
+            <span>Next:</span>
             <div className="tools__current__player">
               <img src={car} alt="" />
               <div className="tools__current__player__colorcode orange"></div>
@@ -100,7 +97,19 @@ function App() {
             </div>
           </div>
 
-          <div className="tools__players"></div>
+          <div className="tools__players">
+            <div className="tools__current__player">
+              <img src={battleship} alt="" />
+              <div className="tools__current__player__colorcode brown"></div>
+              <div className="tools__current__player__name">Anuraag</div>
+            </div>
+            <div className="tools__players__dice__div">
+              <div className="tools__players__dice">
+                <BsFillDice1Fill size={40} />
+              </div>
+              <button>Draw</button>
+            </div>
+          </div>
           <div className="tools__history">Log</div>
         </div>
       </div>

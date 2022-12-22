@@ -9,6 +9,75 @@ import hat from "./assets/pieces/piece_hat.png";
 import shoe from "./assets/pieces/piece_shoe.png";
 import wheelbarrow from "./assets/pieces/piece_wheelbarrow.png";
 import { BsFillDice1Fill } from "react-icons/bs";
+import format from "date-fns/format";
+import { v4 as uuidv4 } from "uuid";
+
+export type Log = {
+  id: string;
+  name: string;
+  dice: number;
+  from: number;
+  to: number;
+  timestamp: number;
+  round: number;
+};
+
+const sampleLogs: Log[] = [
+  {
+    id: uuidv4(),
+    name: "anuraag",
+    dice: 2,
+    from: 0,
+    to: 2,
+    timestamp: 1670656249000,
+    round: 6,
+  },
+  {
+    id: uuidv4(),
+    name: "ian",
+    dice: 1,
+    from: 0,
+    to: 38,
+    timestamp: 1670656248000,
+    round: 5,
+  },
+  {
+    id: uuidv4(),
+    name: "riley",
+    dice: 5,
+    from: 0,
+    to: 5,
+    timestamp: 1670656247000,
+    round: 4,
+  },
+  {
+    id: uuidv4(),
+    name: "sabrina",
+    dice: 4,
+    from: 0,
+    to: 14,
+    timestamp: 1670656242000,
+    round: 3,
+  },
+  {
+    id: uuidv4(),
+    name: "meenakshi",
+    dice: 2,
+    from: 0,
+    to: 2,
+    timestamp: 1670651242000,
+    round: 2,
+  },
+  {
+    id: uuidv4(),
+    name: "irene",
+    dice: 6,
+    from: 0,
+    to: 6,
+    timestamp: 1670651212000,
+    round: 1,
+  },
+];
 
 const stepWithLadder = [1, 4, 8, 21, 28, 50, 71, 80];
 const stepWithSnakes = [32, 36, 48, 62, 88, 95, 97];
@@ -107,10 +176,21 @@ function App() {
               <div className="tools__players__dice">
                 <BsFillDice1Fill size={40} />
               </div>
-              <button>Draw</button>
+              <button>Roll</button>
             </div>
           </div>
-          <div className="tools__history">Log</div>
+          <div className="tools__history">
+            <ul>
+              {sampleLogs
+                .sort((a, b) => b.round - a.round)
+                .map((log) => (
+                  <li key={`${log.timestamp}-${log.name}`}>
+                    [{format(new Date(log.timestamp), "Pp")}]: {log.name} threw{" "}
+                    {log.dice}, moved from {log.from} to {log.to}
+                  </li>
+                ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

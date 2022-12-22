@@ -12,7 +12,7 @@
   &__main {
     display: flex;
     flex-wrap: wrap;
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column-reverse;
     width: 100%;
@@ -299,7 +299,7 @@
   &__current {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     span {
@@ -346,6 +346,15 @@
   }
 }
 
+@keyframes dicerolling {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .tools {
   &__players {
     margin: 2rem 0;
@@ -359,6 +368,33 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      &__rolling {
+        position: relative;
+
+        > svg {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          animation: dicerolling 0.05s forwards;
+          &:nth-child(2) {
+            animation-delay: 0.1s;
+          }
+          &:nth-child(3) {
+            animation-delay: 0.15s;
+          }
+          &:nth-child(4) {
+            animation-delay: 0.2s;
+          }
+          &:nth-child(5) {
+            animation-delay: 0.25s;
+          }
+          &:nth-child(6) {
+            animation-delay: 0.3s;
+          }
+        }
+      }
 
       &__div {
         margin-left: 2rem;

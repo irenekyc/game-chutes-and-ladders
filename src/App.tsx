@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./index.scss";
 import ladder from "./assets/ladder.png";
 import snake from "./assets/snake.svg";
@@ -8,9 +9,10 @@ import cat from "./assets/pieces/piece_cat.png";
 import hat from "./assets/pieces/piece_hat.png";
 import shoe from "./assets/pieces/piece_shoe.png";
 import wheelbarrow from "./assets/pieces/piece_wheelbarrow.png";
-import { BsFillDice1Fill } from "react-icons/bs";
+
 import format from "date-fns/format";
 import { v4 as uuidv4 } from "uuid";
+import Dice from "./components/dice";
 
 export type Log = {
   id: string;
@@ -79,10 +81,102 @@ const sampleLogs: Log[] = [
   },
 ];
 
+export type Player = {
+  name: string;
+  color: string;
+  sequence: number;
+  piece: string;
+};
+
+const players: Player[] = [
+  {
+    name: "Anuraag",
+    color: "brown",
+    sequence: 1,
+    piece: battleship,
+  },
+  {
+    name: "Rick",
+    color: "orange",
+    sequence: 2,
+    piece: cat,
+  },
+  {
+    name: "Meenakshi",
+    color: "yellow",
+    sequence: 3,
+    piece: dog,
+  },
+  {
+    name: "Ian",
+    color: "green",
+    sequence: 4,
+    piece: car,
+  },
+  {
+    name: "Sabrina",
+    color: "light-green",
+    sequence: 5,
+    piece: hat,
+  },
+  {
+    name: "Riley",
+    sequence: 6,
+    color: "blue",
+    piece: shoe,
+  },
+  {
+    name: "Irene",
+    sequence: 7,
+    color: "purple",
+    piece: wheelbarrow,
+  },
+];
+
 const stepWithLadder = [1, 4, 8, 21, 28, 50, 71, 80];
 const stepWithSnakes = [32, 36, 48, 62, 88, 95, 97];
 
 function App() {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [round, setRound] = useState<number | undefined>(undefined);
+  const [historyLog, setHistoryLog] = useState<Log[]>([]);
+  const [playersInSequence, setPlayersInSequence] = useState<Player[]>([]);
+
+  useEffect(() => {
+    // Get round number in
+    setHistoryLog(sampleLogs);
+    setRound(sampleLogs.length + 1);
+    setIsLoaded(true);
+
+    // get players sequence => find the last player
+    setPlayersInSequence(players);
+  }, []);
+
+  const onRollHandler = (dice: number) => {
+    const currentLog: Log = {
+      id: uuidv4(),
+      name: playersInSequence[0].name,
+      from: 1, // previous log to
+      dice,
+      to: 1 + dice,
+      timestamp: new Date().getTime(),
+      round: round || 1,
+    };
+    setHistoryLog([...historyLog, currentLog]);
+  };
+
+  const onClickNextRoundHandler = () => {
+    if (!round || playersInSequence.length === 0) return;
+    setRound(round + 1);
+    setPlayersInSequence([...playersInSequence.slice(1), playersInSequence[0]]);
+  };
+  if (!isLoaded)
+    return (
+      <div className="app">
+        <p>Loading</p>
+      </div>
+    );
+
   return (
     <div className="app">
       <div className="app__header">
@@ -134,55 +228,40 @@ function App() {
         <div className="tools">
           <div className="tools__current">
             <span>Next:</span>
-            <div className="tools__current__player">
-              <img src={car} alt="" />
-              <div className="tools__current__player__colorcode orange"></div>
-              <div className="tools__current__player__name">Rick</div>
-            </div>
-            <div className="tools__current__player">
-              <img src={cat} alt="" />
-              <div className="tools__current__player__colorcode yellow"></div>
-              <div className="tools__current__player__name">Meenakshi</div>
-            </div>
-            <div className="tools__current__player">
-              <img src={shoe} alt="" />
-              <div className="tools__current__player__colorcode green"></div>
-              <div className="tools__current__player__name">Ian</div>
-            </div>
-            <div className="tools__current__player">
-              <img src={dog} alt="" />
-              <div className="tools__current__player__colorcode light-green"></div>
-              <div className="tools__current__player__name">Riley</div>
-            </div>
-            <div className="tools__current__player">
-              <img src={hat} alt="" />
-              <div className="tools__current__player__colorcode blue"></div>
-              <div className="tools__current__player__name">Sabrina</div>
-            </div>
-            <div className="tools__current__player">
-              <img src={wheelbarrow} alt="" />
-              <div className="tools__current__player__colorcode purple"></div>
-              <div className="tools__current__player__name">Irene</div>
-            </div>
+            {playersInSequence.slice(1).map((player) => (
+              <div className="tools__current__player" key={player.name}>
+                <img src={player.piece} alt="" />
+                <div
+                  className={`tools__current__player__colorcode ${player.color}`}
+                ></div>
+                <div className="tools__current__player__name">
+                  {player.name}
+                </div>
+              </div>
+            ))}
           </div>
 
           <div className="tools__players">
             <div className="tools__current__player">
-              <img src={battleship} alt="" />
-              <div className="tools__current__player__colorcode brown"></div>
-              <div className="tools__current__player__name">Anuraag</div>
-            </div>
-            <div className="tools__players__dice__div">
-              <div className="tools__players__dice">
-                <BsFillDice1Fill size={40} />
+              <img src={playersInSequence[0].piece} alt="" />
+              <div
+                className={`tools__current__player__colorcode ${playersInSequence[0].color}`}
+              ></div>
+              <div className="tools__current__player__name">
+                {playersInSequence[0].name}
               </div>
-              <button>Roll</button>
             </div>
+            <Dice
+              onRollHandler={onRollHandler}
+              round={round || 1}
+              onClickNextRoundHandler={onClickNextRoundHandler}
+            />
           </div>
           <div className="tools__history">
             <ul>
-              {sampleLogs
+              {historyLog
                 .sort((a, b) => b.round - a.round)
+                .slice(0, 10)
                 .map((log) => (
                   <li key={`${log.timestamp}-${log.name}`}>
                     [{format(new Date(log.timestamp), "Pp")}]: {log.name} threw{" "}

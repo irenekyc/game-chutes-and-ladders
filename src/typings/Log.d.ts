@@ -6,4 +6,12 @@ export type Log = {
   to: number;
   timestamp: number;
   round: number;
+  ladder?: {
+    from: number;
+    to: number;
+  };
+  snake?: {
+    from: number;
+    to: number;
+  };
 };

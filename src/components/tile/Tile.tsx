@@ -6,9 +6,7 @@ import styles from "./tile.module.scss";
 import ladder from "../../assets/ladder.png";
 import snake from "../../assets/snake.svg";
 import { Log } from "../../typings/Log";
-
-const stepWithLadder = [1, 4, 8, 21, 28, 50, 71, 80];
-const stepWithSnakes = [32, 36, 48, 62, 88, 95, 97];
+import { stepWithLadder, stepWithSnakes } from "../../data/tile";
 
 interface TileProps {
   tileNumber: number;

@@ -13,6 +13,7 @@ import { Log } from "./typings/Log";
 import { sampleLogs } from "./data/logs";
 import getPlayerLastLog from "./helpers/getPlayerLastLog";
 import getLastHistoryByPlayer from "./helpers/getLastHistoryByPlayer";
+import checkDestination from "./helpers/checkDestination";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -31,14 +32,16 @@ function App() {
   }, []);
 
   const onRollHandler = (dice: number) => {
+    const from =
+      getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1;
     const currentLog: Log = {
       id: uuidv4(),
       player: playersInSequence[0],
-      from: getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1, // TODO: currentplayer last log's to
+      from,
       dice,
-      to:
-        (getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1) +
-        dice,
+      ...checkDestination(from, dice),
+      // (getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1) +
+      // dice,
       timestamp: new Date().getTime(),
       round: round || 1,
     };

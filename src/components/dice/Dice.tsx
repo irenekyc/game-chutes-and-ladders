@@ -77,7 +77,6 @@ const Dice: FunctionComponent<DiceProps> = ({
     const randomNumber = Math.ceil(Math.random() * 6);
 
     setCurrentDice(randomNumber);
-    console.log(randomNumber);
     setrollStatus(STATUS_ROLLED);
     onRollHandler(randomNumber);
   };

@@ -11,6 +11,8 @@ import Tile from "./components/tile";
 import { players } from "./data/players";
 import { Log } from "./typings/Log";
 import { sampleLogs } from "./data/logs";
+import getPlayerLastLog from "./helpers/getPlayerLastLog";
+import getLastHistoryByPlayer from "./helpers/getLastHistoryByPlayer";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -32,9 +34,11 @@ function App() {
     const currentLog: Log = {
       id: uuidv4(),
       player: playersInSequence[0],
-      from: 1, // previous log to
+      from: getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1, // TODO: currentplayer last log's to
       dice,
-      to: 1 + dice,
+      to:
+        (getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1) +
+        dice,
       timestamp: new Date().getTime(),
       round: round || 1,
     };
@@ -77,13 +81,7 @@ function App() {
                     <Tile
                       tileNumber={parseInt(number)}
                       key={number}
-                      players={
-                        _groupBy(sampleLogs, "to")[number]
-                          ? _groupBy(sampleLogs, "to")[number].map(
-                              (log) => log.player
-                            )
-                          : []
-                      }
+                      historyByPlayer={getLastHistoryByPlayer(historyLog)}
                     />
                   );
                 })}

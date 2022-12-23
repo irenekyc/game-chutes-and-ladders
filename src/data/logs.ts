@@ -1,5 +1,13 @@
 import { Log } from "../typings/Log";
-import { anuraag, ian, irene, meenakshi, riley, sabrina } from "./players";
+import {
+  anuraag,
+  ian,
+  irene,
+  meenakshi,
+  rick,
+  riley,
+  sabrina,
+} from "./players";
 import { v4 as uuidv4 } from "uuid";
 
 export const sampleLogs: Log[] = [
@@ -19,7 +27,7 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 38,
     timestamp: 1670656248000,
-    round: 5,
+    round: 7,
   },
   {
     id: uuidv4(),
@@ -28,7 +36,7 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 5,
     timestamp: 1670656247000,
-    round: 4,
+    round: 5,
   },
   {
     id: uuidv4(),
@@ -37,7 +45,7 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 14,
     timestamp: 1670656242000,
-    round: 3,
+    round: 4,
   },
   {
     id: uuidv4(),
@@ -46,7 +54,7 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 2,
     timestamp: 1670651242000,
-    round: 2,
+    round: 3,
   },
   {
     id: uuidv4(),
@@ -55,6 +63,15 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 6,
     timestamp: 1670651212000,
+    round: 2,
+  },
+  {
+    id: uuidv4(),
+    player: rick,
+    dice: 2,
+    from: 0,
+    to: 2,
+    timestamp: 1670651012000,
     round: 1,
   },
 ];

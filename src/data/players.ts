@@ -35,7 +35,7 @@ export const ian = {
 
 export const sabrina = {
   name: "Sabrina",
-  color: "light-green",
+  color: "lightgreen",
   sequence: 5,
   piece: "/pieces/piece_hat.png",
 };

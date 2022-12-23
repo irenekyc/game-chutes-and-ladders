@@ -1,20 +1,40 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
+import _groupBy from "lodash/groupBy";
 import { Player } from "../../typings/Player";
 import styles from "./tile.module.scss";
 
 import ladder from "../../assets/ladder.png";
 import snake from "../../assets/snake.svg";
+import { Log } from "../../typings/Log";
 
 const stepWithLadder = [1, 4, 8, 21, 28, 50, 71, 80];
 const stepWithSnakes = [32, 36, 48, 62, 88, 95, 97];
 
 interface TileProps {
   tileNumber: number;
-  players: Player[] | undefined;
+  // players: Player[] | undefined;
+  historyByPlayer: Log[];
 }
 
-const Tile: FunctionComponent<TileProps> = ({ tileNumber, players }) => {
-  console.log(tileNumber, players);
+const Tile: FunctionComponent<TileProps> = ({
+  tileNumber,
+  historyByPlayer,
+}) => {
+  const [players, setPlayers] = useState<Player[] | undefined>(undefined);
+
+  useEffect(() => {
+    if (historyByPlayer.length === 0) return;
+    if (tileNumber === 2) {
+      console.log(historyByPlayer);
+    }
+
+    const thisTileLog = _groupBy(historyByPlayer, "to")[tileNumber];
+    if (thisTileLog) {
+      setPlayers(thisTileLog.map((log) => log.player));
+    } else {
+      setPlayers([]);
+    }
+  }, [historyByPlayer, tileNumber]);
   return (
     <div
       className={`board__step ${

@@ -7,11 +7,11 @@ import {
   BsFillDice5Fill,
   BsFillDice6Fill,
 } from "react-icons/bs";
+import RolledDice from "../rolled-dice";
 
 interface DiceProps {
   round: number;
   onRollHandler: (dice: number) => void;
-  onClickNextRoundHandler: () => void;
 }
 
 const STATUS_DEFAULT = "STATUS_DEFAULT";
@@ -35,6 +35,7 @@ const RollingDice = () => {
       Math.ceil(Math.random() * 6),
     ]);
   }, []);
+
   const getNumberedDice = (diceNumber: number) => {
     switch (diceNumber) {
       case 1:
@@ -59,13 +60,12 @@ const RollingDice = () => {
 const Dice: FunctionComponent<DiceProps> = ({
   onRollHandler,
   round,
-  onClickNextRoundHandler,
 }: DiceProps) => {
   const [rollStatus, setrollStatus] = useState<RollStatus>(STATUS_DEFAULT);
   const [currentDice, setCurrentDice] = useState<number>(1);
 
   const rollingDice = async () => {
-    return new Promise((resolve) => setTimeout(resolve, 300));
+    return new Promise((resolve) => setTimeout(resolve, 500));
   };
 
   const rollDice = async () => {
@@ -77,7 +77,6 @@ const Dice: FunctionComponent<DiceProps> = ({
     const randomNumber = Math.ceil(Math.random() * 6);
 
     setCurrentDice(randomNumber);
-    setrollStatus(STATUS_ROLLED);
     onRollHandler(randomNumber);
   };
 
@@ -95,27 +94,11 @@ const Dice: FunctionComponent<DiceProps> = ({
             <RollingDice />
           </div>
         ) : (
-          <>
-            {currentDice === 1 && <BsFillDice1Fill size={40} />}
-            {currentDice === 2 && <BsFillDice2Fill size={40} />}
-            {currentDice === 3 && <BsFillDice3Fill size={40} />}
-            {currentDice === 4 && <BsFillDice4Fill size={40} />}
-            {currentDice === 5 && <BsFillDice5Fill size={40} />}
-            {currentDice === 6 && <BsFillDice6Fill size={40} />}
-          </>
+          <RolledDice currentDice={currentDice} />
         )}
       </div>
-      <button
-        disabled={rollStatus === STATUS_ROLLING}
-        onClick={
-          rollStatus === STATUS_DEFAULT ? rollDice : onClickNextRoundHandler
-        }
-      >
-        {rollStatus === STATUS_DEFAULT
-          ? "Roll"
-          : rollStatus === STATUS_ROLLING
-          ? "Rolling"
-          : "Next"}
+      <button disabled={rollStatus === STATUS_ROLLING} onClick={rollDice}>
+        Roll
       </button>
     </div>
   );

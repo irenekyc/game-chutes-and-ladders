@@ -22,9 +22,6 @@ const Tile: FunctionComponent<TileProps> = ({
 
   useEffect(() => {
     if (historyByPlayer.length === 0) return;
-    if (tileNumber === 2) {
-      console.log(historyByPlayer);
-    }
 
     const thisTileLog = _groupBy(historyByPlayer, "to")[tileNumber];
     if (thisTileLog) {

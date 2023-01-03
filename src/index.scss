@@ -1,7 +1,12 @@
 @import "./variables.scss";
 
 .app {
+  max-width: 1280px;
+  margin: 0 auto;
   font-family: sans-serif;
+  li {
+    list-style: none;
+  }
   &__header {
     text-align: center;
     h1 {
@@ -27,10 +32,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     width: 100%;
     padding: 1rem 0;
     @include desktopAndUp {
       width: 65%;
+    }
+  }
+
+  &__action {
+    height: 60px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+      display: block;
     }
   }
   width: 500px;
@@ -112,6 +129,23 @@
   &__players,
   &__history {
     width: 100%;
+  }
+
+  &__history {
+    height: 150px;
+    max-width: 350px;
+    padding: 0.25rem 0.75rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    border-radius: 0.75rem;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    ul,
+    li {
+      padding: 0;
+    }
+    li {
+      padding: 0.2rem 0;
+    }
   }
 }
 
@@ -311,8 +345,8 @@
       align-items: center;
       justify-content: center;
       img {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         margin-bottom: 5px;
       }
       padding: 0.25rem;
@@ -360,8 +394,39 @@
     margin: 2rem 0;
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: stretch;
+    flex-direction: column;
+
+    &__player {
+      cursor: pointer;
+      max-width: 350px;
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.75rem;
+
+      &__active {
+        border: 2px solid blue;
+      }
+
+      &__name {
+        font-size: 1rem;
+        position: relative;
+      }
+      &__crown {
+        position: absolute;
+        left: 150%;
+        top: 5px;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      &__position {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+    }
+
     &__dice {
       width: 60px;
       height: 60px;
@@ -399,7 +464,6 @@
       &__div {
         margin-left: 2rem;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
       }

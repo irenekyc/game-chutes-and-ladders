@@ -6,7 +6,6 @@ const getLastHistoryByPlayer = (history: Log[]): Log[] => {
     history.sort((a, b) => b.timestamp - a.timestamp),
     "player.name"
   );
-  console.log(Object.values(logsByPlayer));
   return Object.values(
     _groupBy(
       history.sort((a, b) => b.timestamp - a.timestamp),

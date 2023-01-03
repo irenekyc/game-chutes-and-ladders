@@ -18,7 +18,7 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 2,
     timestamp: 1670656249000,
-    round: 6,
+    round: 7,
   },
   {
     id: uuidv4(),
@@ -27,7 +27,7 @@ export const sampleLogs: Log[] = [
     from: 0,
     to: 38,
     timestamp: 1670656248000,
-    round: 7,
+    round: 6,
   },
   {
     id: uuidv4(),
@@ -46,6 +46,10 @@ export const sampleLogs: Log[] = [
     to: 14,
     timestamp: 1670656242000,
     round: 4,
+    ladder: {
+      from: 4,
+      to: 14,
+    },
   },
   {
     id: uuidv4(),

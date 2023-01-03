@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import _groupBy from "lodash/groupBy";
+import _orderBy from "lodash/orderBy";
+import _sortBy from "lodash/sortBy";
 import "./index.scss";
 
 import { v4 as uuidv4 } from "uuid";
@@ -7,15 +8,16 @@ import { v4 as uuidv4 } from "uuid";
 import Dice from "./components/dice";
 import { Player } from "./typings/Player";
 import Tile from "./components/tile";
-import { players } from "./data/players";
 import { Log } from "./typings/Log";
-import { sampleLogs } from "./data/logs";
 import getPlayerLastLog from "./helpers/getPlayerLastLog";
 import getLastHistoryByPlayer from "./helpers/getLastHistoryByPlayer";
 import checkDestination from "./helpers/checkDestination";
 import LogList from "./components/log-list";
 import { FaCrown } from "react-icons/fa";
+import { IoArrowUndoSharp } from "react-icons/io5";
+
 import RolledDice from "./components/rolled-dice";
+import { game } from "./data/game";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -27,30 +29,32 @@ function App() {
   const [currentWinner, setCurrentWinner] = useState<Player | undefined>(
     undefined
   );
-  useEffect(() => {
-    // Get round number in
-    setHistoryLog(sampleLogs);
-    setRound(sampleLogs.length + 1);
-    setIsLoaded(true);
 
-    setActivePlayer(players[0]);
+  useEffect(() => {
+    // load game data
+    setHistoryLog(game.logs);
+    setRound(game.round);
+    setIsLoaded(true);
   }, []);
 
   const onRollHandler = (dice: number) => {
     if (!activePlayer || !round) return;
-    const from = getPlayerLastLog(historyLog, activePlayer.name).to || 1;
+    const from = getPlayerLastLog(historyLog, activePlayer.name)
+      ? getPlayerLastLog(historyLog, activePlayer.name).to
+      : 0;
     const currentLog: Log = {
       id: uuidv4(),
       player: activePlayer,
       from,
       dice,
       ...checkDestination(from, dice),
-      // (getPlayerLastLog(historyLog, playersInSequence[0].name).to || 1) +
-      // dice,
       timestamp: new Date().getTime(),
       round: round || 1,
     };
-    setHistoryLog([...historyLog, currentLog]);
+    const updatedHistoryLog = [...historyLog];
+    updatedHistoryLog.push(currentLog);
+    setHistoryLog(updatedHistoryLog);
+
     setRound(round + 1);
     setActivePlayer(undefined);
     if (historyRef.current) {
@@ -62,13 +66,27 @@ function App() {
     setActivePlayer(chosenPlayer);
 
   useEffect(() => {
-    if (historyLog.length === 0) return;
+    if (historyLog.length === 0) {
+      setCurrentWinner(undefined);
+      return;
+    }
     const logs = getLastHistoryByPlayer(historyLog);
     const winner = logs.sort((a, b) => b.to - a.to)[0];
-    setCurrentWinner(winner.player);
+    if (winner.to > 0) {
+      setCurrentWinner(winner.player);
+    } else {
+      setCurrentWinner(undefined);
+    }
   }, [historyLog]);
 
   const historyRef = useRef<HTMLDivElement | null>(null);
+
+  const onClickUndoHandler = (logId: string) => {
+    if (historyLog.length === 0) return;
+
+    const updatedHistoryLog = historyLog.filter((log) => log.id !== logId);
+    setHistoryLog(updatedHistoryLog);
+  };
 
   if (!isLoaded)
     return (
@@ -97,10 +115,17 @@ function App() {
               </>
             ) : (
               <div>
-                {historyLog[0].player.name} threw{" "}
-                <RolledDice currentDice={historyLog[0].dice} size={20} /> ,
-                moved to {historyLog[0].to}
-                <p>Choose next player</p>
+                {historyLog.length > 0 && (
+                  <>
+                    {historyLog[0].player.name} rolled{" "}
+                    <RolledDice currentDice={historyLog[0].dice} size={20} /> ,
+                    moved to {historyLog[0].to}
+                  </>
+                )}
+
+                <p>
+                  Choose {historyLog.length === 0 ? "first" : "next"} player
+                </p>
               </div>
             )}
           </div>
@@ -133,15 +158,23 @@ function App() {
         <div className="tools">
           <div className="tools__history" ref={historyRef}>
             <ul>
+              <li>Welcome</li>
               {historyLog
                 .sort((a, b) => a.round - b.round)
-                .map((log) => (
-                  <LogList log={log} key={log.round + "-" + log.player} />
+                .map((log, index) => (
+                  <li key={`${log.timestamp}-${log.player.name}`}>
+                    <LogList log={log} key={log.round + "-" + log.player} />
+                    {index === historyLog.length - 1 && (
+                      <button onClick={() => onClickUndoHandler(log.id)}>
+                        <IoArrowUndoSharp />
+                      </button>
+                    )}
+                  </li>
                 ))}
             </ul>
           </div>
           <div className="tools__players">
-            {players.map((player) => (
+            {game.players.map((player) => (
               <div
                 className={`tools__players__player ${
                   activePlayer && activePlayer.name === player.name
@@ -166,7 +199,9 @@ function App() {
                   )}
                 </div>
                 <div className="tools__players__player__position">
-                  {getPlayerLastLog(historyLog, player.name).to}
+                  {getPlayerLastLog(historyLog, player.name)
+                    ? getPlayerLastLog(historyLog, player.name).to
+                    : 0}
                 </div>
               </div>
             ))}

@@ -139,12 +139,23 @@
     scroll-behavior: smooth;
     border-radius: 0.75rem;
     border: 2px solid rgba(0, 0, 0, 0.25);
+    position: relative;
+
+    &__undo-button {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 0.75rem;
+    }
     ul,
     li {
       padding: 0;
+      margin: 0;
     }
     li {
       padding: 0.2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   }
 }

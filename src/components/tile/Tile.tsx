@@ -21,7 +21,10 @@ const Tile: FunctionComponent<TileProps> = ({
   const [players, setPlayers] = useState<Player[] | undefined>(undefined);
 
   useEffect(() => {
-    if (historyByPlayer.length === 0) return;
+    if (historyByPlayer.length === 0) {
+      setPlayers([]);
+      return;
+    }
 
     const thisTileLog = _groupBy(historyByPlayer, "to")[tileNumber];
     if (thisTileLog) {
@@ -30,6 +33,7 @@ const Tile: FunctionComponent<TileProps> = ({
       setPlayers([]);
     }
   }, [historyByPlayer, tileNumber]);
+
   return (
     <div
       className={`board__step ${

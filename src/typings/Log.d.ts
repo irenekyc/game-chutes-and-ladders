@@ -14,4 +14,5 @@ export type Log = {
     from: number;
     to: number;
   };
+  deleted?: boolean;
 };

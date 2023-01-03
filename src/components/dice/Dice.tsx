@@ -36,25 +36,64 @@ const RollingDice = () => {
     ]);
   }, []);
 
-  const getNumberedDice = (diceNumber: number) => {
+  const getNumberedDice = (diceNumber: number, index: number) => {
     switch (diceNumber) {
       case 1:
-        return <BsFillDice1Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice1Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
       case 2:
-        return <BsFillDice2Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice2Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
       case 3:
-        return <BsFillDice3Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice3Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
       case 4:
-        return <BsFillDice4Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice4Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
       case 5:
-        return <BsFillDice5Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice5Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
       case 6:
-        return <BsFillDice6Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice6Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
       default:
-        return <BsFillDice1Fill size={40} key={`random-dice-${diceNumber}`} />;
+        return (
+          <BsFillDice1Fill
+            size={40}
+            key={`random-dice-${diceNumber}-${index}`}
+          />
+        );
     }
   };
-  return <>{sequence.map((diceNumber) => getNumberedDice(diceNumber))}</>;
+  return (
+    <>
+      {sequence.map((diceNumber, index) => getNumberedDice(diceNumber, index))}
+    </>
+  );
 };
 
 const Dice: FunctionComponent<DiceProps> = ({

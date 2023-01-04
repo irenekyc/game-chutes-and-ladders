@@ -37,9 +37,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 0.5rem 0;
       h3 {
-        margin-right: 0.5rem;
         line-height: 1;
+        margin: 0;
+        margin-right: 0.5rem;
       }
     }
     &__game-list {

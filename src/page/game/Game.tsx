@@ -5,6 +5,7 @@ import _sortBy from "lodash/sortBy";
 import { v4 as uuidv4 } from "uuid";
 import { FaCrown } from "react-icons/fa";
 import { IoArrowUndoSharp } from "react-icons/io5";
+import Modal from "react-bootstrap/Modal";
 
 import Dice from "../../components/dice";
 import { Player } from "../../typings/Player";
@@ -40,6 +41,7 @@ const Game: FunctionComponent = () => {
   const [gameId, setGameId] = useState<string | undefined>();
   const [gameName, setGameName] = useState<string | undefined>(undefined);
   const [gameError, setGameError] = useState<boolean>(false);
+  const [gameFinished, setGameFinished] = useState<boolean>(false);
   const { gameId: gameIdParams } = useParams();
 
   const loadData = async (id: string) => {
@@ -105,7 +107,10 @@ const Game: FunctionComponent = () => {
     }
     const logs = getLastHistoryByPlayer(historyLog);
     const winner = logs.sort((a, b) => b.to - a.to)[0];
-    if (winner.to > 0) {
+    if (winner.to === 100) {
+      setGameFinished(true);
+      setCurrentWinner(winner.player);
+    } else if (winner.to > 0) {
       setCurrentWinner(winner.player);
     } else {
       setCurrentWinner(undefined);
@@ -192,6 +197,15 @@ const Game: FunctionComponent = () => {
   }
   return (
     <>
+      {currentWinner && gameFinished && (
+        <Modal show>
+          <>
+            {currentWinner.name} WON!
+            <button onClick={onClickRestartGame}>Play Again</button>
+          </>
+        </Modal>
+      )}
+
       <div className="app__main__game-name-div">
         <h3>{gameName} </h3>{" "}
         {historyLog.length > 0 && (

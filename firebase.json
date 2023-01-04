@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "chutes-and-ladders",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

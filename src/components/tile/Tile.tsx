@@ -51,7 +51,7 @@ const Tile: FunctionComponent<TileProps> = ({
               key={`chess-player-${player.name}`}
             >
               <img
-                src={player.piece}
+                src={`/pieces/piece_${player.piece}.png`}
                 alt={""}
                 style={{ background: player.color }}
               />

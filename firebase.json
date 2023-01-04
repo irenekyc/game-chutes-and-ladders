@@ -1,0 +1,6 @@
+{
+  "hosting": {
+    "site": "chutes-and-ladders-manifest",
+    "public": "public"
+  }
+}

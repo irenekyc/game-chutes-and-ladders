@@ -14,6 +14,7 @@ export const sampleLogs: Log[] = [
   {
     id: uuidv4(),
     player: anuraag,
+    playerName: anuraag.name,
     dice: 2,
     from: 0,
     to: 2,
@@ -23,6 +24,7 @@ export const sampleLogs: Log[] = [
   {
     id: uuidv4(),
     player: ian,
+    playerName: ian.name,
     dice: 1,
     from: 0,
     to: 38,
@@ -32,6 +34,7 @@ export const sampleLogs: Log[] = [
   {
     id: uuidv4(),
     player: riley,
+    playerName: riley.name,
     dice: 5,
     from: 0,
     to: 5,
@@ -41,6 +44,7 @@ export const sampleLogs: Log[] = [
   {
     id: uuidv4(),
     player: sabrina,
+    playerName: sabrina.name,
     dice: 4,
     from: 0,
     to: 14,
@@ -54,6 +58,7 @@ export const sampleLogs: Log[] = [
   {
     id: uuidv4(),
     player: meenakshi,
+    playerName: meenakshi.name,
     dice: 2,
     from: 0,
     to: 2,
@@ -68,6 +73,7 @@ export const sampleLogs: Log[] = [
     to: 6,
     timestamp: 1670651212000,
     round: 2,
+    playerName: irene.name,
   },
   {
     id: uuidv4(),
@@ -77,5 +83,6 @@ export const sampleLogs: Log[] = [
     to: 2,
     timestamp: 1670651012000,
     round: 1,
+    playerName: rick.name,
   },
 ];

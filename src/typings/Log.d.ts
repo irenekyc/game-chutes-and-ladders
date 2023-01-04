@@ -1,6 +1,7 @@
 export type Log = {
   id: string;
-  player: Player;
+  playerName?: string;
+  player?: Player;
   dice: number;
   from: number;
   to: number;

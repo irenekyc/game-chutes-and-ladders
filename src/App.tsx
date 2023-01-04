@@ -17,7 +17,15 @@ import { FaCrown } from "react-icons/fa";
 import { IoArrowUndoSharp } from "react-icons/io5";
 
 import RolledDice from "./components/rolled-dice";
+import fetchGame from "./helpers/fetchGame";
+import PlayerInput from "./components/player-input";
+import { colors, pieces } from "./data/players";
+import savePlayerToFirebase from "./helpers/savePlayerToFirebase";
 import { game } from "./data/game";
+import getAvailableColors from "./helpers/getAvailableColors";
+import getAvailablePieces from "./helpers/getAvailablePieces";
+import addLogsToFirebase from "./helpers/updateLogsToFirebase";
+import updateLogsToFirebase from "./helpers/updateLogsToFirebase";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -29,12 +37,31 @@ function App() {
   const [currentWinner, setCurrentWinner] = useState<Player | undefined>(
     undefined
   );
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [gameId] = useState<string>("manifest-round-1");
+  const [gameName, setGameName] = useState<string | undefined>(undefined);
+  const [gameError, setGameError] = useState<boolean>(false);
+
+  const loadData = async () => {
+    const gameData = await fetchGame(gameId);
+    setIsLoaded(true);
+    if (!gameData) {
+      setGameError(true);
+    } else {
+      setPlayers(gameData.players);
+      setHistoryLog(gameData.logs);
+      setRound(gameData.round);
+      setGameName(gameData.name);
+    }
+    // scroll to bottom
+    if (historyRef.current && historyListRef.current) {
+      historyRef.current.scrollTo(0, historyListRef.current.scrollHeight);
+    }
+  };
 
   useEffect(() => {
     // load game data
-    setHistoryLog(game.logs);
-    setRound(game.round);
-    setIsLoaded(true);
+    loadData();
   }, []);
 
   const onRollHandler = (dice: number) => {
@@ -45,6 +72,7 @@ function App() {
     const currentLog: Log = {
       id: uuidv4(),
       player: activePlayer,
+      playerName: activePlayer.name,
       from,
       dice,
       ...checkDestination(from, dice),
@@ -54,7 +82,7 @@ function App() {
     const updatedHistoryLog = [...historyLog];
     updatedHistoryLog.push(currentLog);
     setHistoryLog(updatedHistoryLog);
-
+    updateLogsToFirebase(updatedHistoryLog, round + 1, gameId);
     setRound(round + 1);
     setActivePlayer(undefined);
     if (historyRef.current) {
@@ -80,12 +108,59 @@ function App() {
   }, [historyLog]);
 
   const historyRef = useRef<HTMLDivElement | null>(null);
+  const historyListRef = useRef<HTMLUListElement | null>(null);
 
   const onClickUndoHandler = (logId: string) => {
-    if (historyLog.length === 0) return;
-
+    if (historyLog.length === 0 || !round) return;
     const updatedHistoryLog = historyLog.filter((log) => log.id !== logId);
+    updateLogsToFirebase(updatedHistoryLog, round, gameId);
     setHistoryLog(updatedHistoryLog);
+  };
+
+  const renderAction = (): JSX.Element => {
+    if (activePlayer) {
+      return (
+        <>
+          <div className="tools__current__player">
+            <img src={`/pieces/piece_${activePlayer.piece}.png`} alt="" />
+            <div
+              className={`tools__current__player__colorcode ${activePlayer.color}`}
+            ></div>
+          </div>
+          <Dice onRollHandler={onRollHandler} round={round || 1} />
+        </>
+      );
+    }
+    if (players.length === 0) {
+      return <p>Add Players</p>;
+    }
+    if (historyLog.length > 0) {
+      return (
+        <p>
+          {historyLog[0].playerName} rolled{" "}
+          <RolledDice currentDice={historyLog[0].dice} size={20} /> , moved to{" "}
+          {historyLog[0].to}
+          <p>Choose next player</p>
+        </p>
+      );
+    }
+    if (historyLog.length === 0 && players.length > 0) {
+      return <p>Choose first player</p>;
+    }
+    return <></>;
+  };
+
+  const savePlayer = (color: string, name: string, piece: string) => {
+    const updatedPlayers: Player[] = [
+      ...players,
+      {
+        name,
+        color,
+        piece,
+      },
+    ];
+    savePlayerToFirebase(updatedPlayers, gameId);
+    setPlayers(updatedPlayers);
   };
 
   if (!isLoaded)
@@ -95,40 +170,23 @@ function App() {
       </div>
     );
 
+  if (gameError) {
+    return (
+      <div className="app">
+        <p>Error</p>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <div className="app__header">
         <h1>Manifest Chutes and Ladders</h1>
+        <h3>{gameName}</h3>
       </div>
       <div className="app__main">
         <div className="board__wrapper">
-          <div className="board__action">
-            {activePlayer ? (
-              <>
-                <div className="tools__current__player">
-                  <img src={activePlayer.piece} alt="" />
-                  <div
-                    className={`tools__current__player__colorcode ${activePlayer.color}`}
-                  ></div>
-                </div>
-                <Dice onRollHandler={onRollHandler} round={round || 1} />
-              </>
-            ) : (
-              <div>
-                {historyLog.length > 0 && (
-                  <>
-                    {historyLog[0].player.name} rolled{" "}
-                    <RolledDice currentDice={historyLog[0].dice} size={20} /> ,
-                    moved to {historyLog[0].to}
-                  </>
-                )}
-
-                <p>
-                  Choose {historyLog.length === 0 ? "first" : "next"} player
-                </p>
-              </div>
-            )}
-          </div>
+          <div className="board__action">{renderAction()}</div>
 
           <div className="board">
             {[...Array(10).keys()].reverse().map((row) => (
@@ -157,13 +215,13 @@ function App() {
         </div>
         <div className="tools">
           <div className="tools__history" ref={historyRef}>
-            <ul>
+            <ul ref={historyListRef}>
               <li>Welcome</li>
               {historyLog
                 .sort((a, b) => a.round - b.round)
                 .map((log, index) => (
-                  <li key={`${log.timestamp}-${log.player.name}`}>
-                    <LogList log={log} key={log.round + "-" + log.player} />
+                  <li key={`${log.timestamp}-${log.playerName}`}>
+                    <LogList log={log} key={log.round + "-" + log.playerName} />
                     {index === historyLog.length - 1 && (
                       <button onClick={() => onClickUndoHandler(log.id)}>
                         <IoArrowUndoSharp />
@@ -174,7 +232,7 @@ function App() {
             </ul>
           </div>
           <div className="tools__players">
-            {game.players.map((player) => (
+            {players.map((player) => (
               <div
                 className={`tools__players__player ${
                   activePlayer && activePlayer.name === player.name
@@ -185,7 +243,7 @@ function App() {
                 onClick={() => changeActivePlayer(player)}
               >
                 <div className="tools__current__player">
-                  <img src={player.piece} alt="" />
+                  <img src={`/pieces/piece_${player.piece}.png`} alt="" />
                   <div
                     className={`tools__current__player__colorcode ${player.color}`}
                   ></div>
@@ -205,6 +263,13 @@ function App() {
                 </div>
               </div>
             ))}
+            {players.length < 8 && (
+              <PlayerInput
+                availableColors={getAvailableColors(players)}
+                availablePieces={getAvailablePieces(players)}
+                addHandler={savePlayer}
+              />
+            )}
           </div>
         </div>
       </div>

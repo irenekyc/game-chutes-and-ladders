@@ -8,8 +8,7 @@ interface LogProps {
 const LogList: FunctionComponent<LogProps> = ({ log, ...props }: LogProps) => {
   return (
     <span {...props}>
-      <strong>{log.player.name}</strong> rolled {log.dice}, moved from{" "}
-      {log.from}
+      <strong>{log.playerName}</strong> rolled {log.dice}, moved from {log.from}
       {log.ladder &&
         ` to ${log.ladder.from}, hit a ladder and climbed to ${log.ladder.to}`}{" "}
       {log.snake &&

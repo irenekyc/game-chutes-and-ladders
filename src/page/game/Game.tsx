@@ -178,6 +178,7 @@ const Game: FunctionComponent = () => {
     if (!gameId) return;
     setHistoryLog([]);
     restartGame(gameId);
+    setGameFinished(false);
   };
 
   if (!isLoaded)
@@ -198,11 +199,11 @@ const Game: FunctionComponent = () => {
   return (
     <>
       {currentWinner && gameFinished && (
-        <Modal show>
-          <>
-            {currentWinner.name} WON!
+        <Modal show centered>
+          <Modal.Body className="app__modal__body">
+            <p>{currentWinner.name} WON!</p>
             <button onClick={onClickRestartGame}>Play Again</button>
-          </>
+          </Modal.Body>
         </Modal>
       )}
 

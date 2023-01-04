@@ -14,7 +14,10 @@ const checkDestination = (
     to: number;
   };
 } => {
-  const destination: number = from + dice;
+  let destination: number = from + dice;
+  if (destination > 100) {
+    destination = 100;
+  }
   // check if it hit ladder
   if (ladderTiles[destination as keyof typeof ladderTiles]) {
     return {

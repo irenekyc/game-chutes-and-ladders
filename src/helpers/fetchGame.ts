@@ -17,8 +17,8 @@ const fetchGame = async (
     if (game.exists()) {
       const gameData = game.data();
       return {
-        logs: gameData.logs,
-        players: gameData.players,
+        logs: gameData.logs || [],
+        players: gameData.players || [],
         round: gameData.round,
         name: gameData.name,
       };

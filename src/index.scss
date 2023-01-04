@@ -1,5 +1,9 @@
 @import "./variables.scss";
 
+.error-text {
+  color: red;
+}
+
 .app {
   max-width: 1280px;
   margin: 0 auto;
@@ -17,9 +21,6 @@
       font-size: 2rem;
     }
   }
-  h3 {
-    text-align: center;
-  }
 
   &__main {
     display: flex;
@@ -30,6 +31,46 @@
     width: 100%;
     @include desktopAndUp {
       flex-direction: row;
+    }
+
+    &__game-name-div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      h3 {
+        margin-right: 0.5rem;
+        line-height: 1;
+      }
+    }
+    &__game-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      a {
+        text-transform: capitalize;
+      }
+      p {
+        margin: 0;
+      }
+
+      &__add {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+
+        &__input {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+
+          small {
+            font-size: 0.65rem;
+          }
+        }
+      }
     }
   }
 }

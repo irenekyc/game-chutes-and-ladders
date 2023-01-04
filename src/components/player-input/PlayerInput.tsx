@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import styles from "./PlayerInput.module.scss";
 import { ImCheckboxChecked } from "react-icons/im";
@@ -17,12 +17,19 @@ const PlayerInput: FunctionComponent<PlayerInputProps> = ({
   const [color, setColor] = useState<string | undefined>(availableColors[0]);
   const [piece, setPiece] = useState<string | undefined>(availablePieces[0]);
   const [name, setName] = useState<string | undefined>(undefined);
+
   const confirmHandler = () => {
     if (color && piece && name) {
       addHandler(color, name, piece);
       setName(undefined);
     }
   };
+
+  useEffect(() => {
+    setColor(availableColors[0]);
+    setPiece(availablePieces[0]);
+  }, [availableColors, availablePieces]);
+
   return (
     <div className={styles.playerInput}>
       <div>

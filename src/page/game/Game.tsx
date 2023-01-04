@@ -22,6 +22,9 @@ import savePlayerToFirebase from "../../helpers/savePlayerToFirebase";
 import getAvailableColors from "../../helpers/getAvailableColors";
 import getAvailablePieces from "../../helpers/getAvailablePieces";
 import updateLogsToFirebase from "../../helpers/updateLogsToFirebase";
+import restartGame from "../../helpers/restartGame";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 const Game: FunctionComponent = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -34,12 +37,15 @@ const Game: FunctionComponent = () => {
     undefined
   );
   const [players, setPlayers] = useState<Player[]>([]);
-  const [gameId] = useState<string>("manifest-round-1");
+  const [gameId, setGameId] = useState<string | undefined>();
   const [gameName, setGameName] = useState<string | undefined>(undefined);
   const [gameError, setGameError] = useState<boolean>(false);
+  const { gameId: gameIdParams } = useParams();
 
-  const loadData = async () => {
-    const gameData = await fetchGame(gameId);
+  const loadData = async (id: string) => {
+    if (!id) return;
+    const gameData = await fetchGame(id);
+
     setIsLoaded(true);
     if (!gameData) {
       setGameError(true);
@@ -48,6 +54,7 @@ const Game: FunctionComponent = () => {
       setHistoryLog(gameData.logs);
       setRound(gameData.round);
       setGameName(gameData.name);
+      setGameId(id);
     }
     // scroll to bottom
     if (historyRef.current && historyListRef.current) {
@@ -56,12 +63,13 @@ const Game: FunctionComponent = () => {
   };
 
   useEffect(() => {
+    if (!gameIdParams) return;
     // load game data
-    loadData();
-  }, []);
+    loadData(gameIdParams);
+  }, [gameIdParams]);
 
   const onRollHandler = (dice: number) => {
-    if (!activePlayer || !round) return;
+    if (!activePlayer || !round || !gameId) return;
     const from = getPlayerLastLog(historyLog, activePlayer.name)
       ? getPlayerLastLog(historyLog, activePlayer.name).to
       : 0;
@@ -108,7 +116,7 @@ const Game: FunctionComponent = () => {
   const historyListRef = useRef<HTMLUListElement | null>(null);
 
   const onClickUndoHandler = (logId: string) => {
-    if (historyLog.length === 0 || !round) return;
+    if (historyLog.length === 0 || !round || !gameId) return;
     const updatedHistoryLog = historyLog.filter((log) => log.id !== logId);
     updateLogsToFirebase(updatedHistoryLog, round, gameId);
     setHistoryLog(updatedHistoryLog);
@@ -148,6 +156,7 @@ const Game: FunctionComponent = () => {
   };
 
   const savePlayer = (color: string, name: string, piece: string) => {
+    if (!gameId) return;
     const updatedPlayers: Player[] = [
       ...players,
       {
@@ -158,6 +167,12 @@ const Game: FunctionComponent = () => {
     ];
     savePlayerToFirebase(updatedPlayers, gameId);
     setPlayers(updatedPlayers);
+  };
+
+  const onClickRestartGame = () => {
+    if (!gameId) return;
+    setHistoryLog([]);
+    restartGame(gameId);
   };
 
   if (!isLoaded)
@@ -171,12 +186,19 @@ const Game: FunctionComponent = () => {
     return (
       <div className="app">
         <p>Error</p>
+        <Link to="/">Back home</Link>
       </div>
     );
   }
   return (
     <>
-      <h3>{gameName}</h3>
+      <div className="app__main__game-name-div">
+        <h3>{gameName} </h3>{" "}
+        {historyLog.length > 0 && (
+          <button onClick={onClickRestartGame}>Restart Game</button>
+        )}
+      </div>
+
       <div className="app__main">
         <div className="board__wrapper">
           <div className="board__action">{renderAction()}</div>

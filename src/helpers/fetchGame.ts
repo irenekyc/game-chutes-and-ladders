@@ -16,34 +16,6 @@ const fetchGame = async (
     const game = await getDoc(gameRef);
     if (game.exists()) {
       const gameData = game.data();
-      // const playerIds: string[] = gameData.players.map(
-      //   (player: string) => player
-      // );
-      // const logsIds: string[] = gameData.logs.map((log: string) => log);
-
-      // const players = await Promise.all(
-      //   playerIds.map(async (playerId) => {
-      //     try {
-      //       const playerRef = doc(db, "players", playerId);
-      //       const player = await getDoc(playerRef);
-      //       return player.data();
-      //     } catch {
-      //       return null;
-      //     }
-      //   })
-      // );
-      // const logs = await Promise.all(
-      //   logsIds.map(async (logId) => {
-      //     try {
-      //       const logRef = doc(db, "logs", logId);
-      //       const log = await getDoc(logRef);
-      //       return log.data();
-      //     } catch {
-      //       return null;
-      //     }
-      //   })
-      // );
-      console.log(gameData);
       return {
         logs: gameData.logs,
         players: gameData.players,
@@ -54,7 +26,6 @@ const fetchGame = async (
       return null;
     }
   } catch (err) {
-    console.log(err);
     return null;
     // do something
   }

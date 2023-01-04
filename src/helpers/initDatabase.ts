@@ -6,12 +6,12 @@ import { getFirestore } from "@firebase/firestore/lite";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCcyDQcvvamOqnZ2ZZfO85Wmzw5z0tE69g",
-  authDomain: "chutes-and-ladders-demo.firebaseapp.com",
-  projectId: "chutes-and-ladders-demo",
-  storageBucket: "chutes-and-ladders-demo.appspot.com",
-  messagingSenderId: "327361735895",
-  appId: "1:327361735895:web:4ab7dc928d28595136d492",
+  apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

@@ -55,6 +55,8 @@ export const colors = [
   "orange",
   "brown",
   "teal",
+  "lightpink",
+  "salmon",
 ];
 
 export const pieces = [
@@ -66,6 +68,8 @@ export const pieces = [
   "battleship",
   "car",
   "thimble",
+  "penguin",
+  "duck",
 ];
 
 export const players: Player[] = [

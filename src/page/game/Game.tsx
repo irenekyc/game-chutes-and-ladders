@@ -1,5 +1,5 @@
-import { FunctionComponent, useMemo } from "react";
-import { useEffect, useState, useRef } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
+
 import _orderBy from "lodash/orderBy";
 import _sortBy from "lodash/sortBy";
 import { v4 as uuidv4 } from "uuid";
@@ -26,7 +26,6 @@ import updateLogsToFirebase from "../../helpers/updateLogsToFirebase";
 import restartGame from "../../helpers/restartGame";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import getLastHistory from "../../helpers/getLastHistory";
 
 const Game: FunctionComponent = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -59,10 +58,6 @@ const Game: FunctionComponent = () => {
       setGameName(gameData.name);
       setGameId(id);
     }
-    // scroll to bottom
-    if (historyRef.current && historyListRef.current) {
-      historyRef.current.scrollTo(0, historyListRef.current.scrollHeight);
-    }
   };
 
   useEffect(() => {
@@ -91,11 +86,6 @@ const Game: FunctionComponent = () => {
     setHistoryLog(updatedHistoryLog);
     updateLogsToFirebase(updatedHistoryLog, round + 1, gameId);
     setRound(round + 1);
-
-    // scroll to bottom
-    if (historyRef.current && historyListRef.current) {
-      historyRef.current.scrollBy(0, 100);
-    }
   };
 
   useEffect(() => {
@@ -139,9 +129,6 @@ const Game: FunctionComponent = () => {
     }
   }, [historyLog]);
 
-  const historyRef = useRef<HTMLDivElement | null>(null);
-  const historyListRef = useRef<HTMLUListElement | null>(null);
-
   const onClickUndoHandler = (logId: string) => {
     if (historyLog.length === 0 || !round || !gameId) return;
     const updatedHistoryLog = historyLog.filter((log) => log.id !== logId);
@@ -177,8 +164,13 @@ const Game: FunctionComponent = () => {
       return (
         <p>
           {lastHistory.playerName} rolled{" "}
-          <RolledDice currentDice={lastHistory.dice} size={20} /> , moved to{" "}
-          {lastHistory.to}
+          <RolledDice currentDice={lastHistory.dice} size={20} /> , moved from{" "}
+          {lastHistory.from}
+          {lastHistory.ladder &&
+            ` to ${lastHistory.ladder.from}, hit a ladder and climbed to ${lastHistory.ladder.to}`}{" "}
+          {lastHistory.snake &&
+            ` to ${lastHistory.snake.from}, hit a snake and back to ${lastHistory.snake.to}`}
+          {!lastHistory.ladder && !lastHistory.snake && ` to ${lastHistory.to}`}
           <p>Choose next player</p>
         </p>
       );
@@ -265,11 +257,6 @@ const Game: FunctionComponent = () => {
                       tileNumber={parseInt(number)}
                       key={number}
                       historyByPlayer={getLastHistoryByPlayer(historyLog)}
-                      lastPlayer={
-                        getLastHistory(historyLog)
-                          ? getLastHistory(historyLog).playerName
-                          : undefined
-                      }
                     />
                   );
                 })}
@@ -278,23 +265,6 @@ const Game: FunctionComponent = () => {
           </div>
         </div>
         <div className="tools">
-          <div className="tools__history" ref={historyRef}>
-            <ul ref={historyListRef}>
-              <li>Welcome</li>
-              {historyLog
-                .sort((a, b) => a.round - b.round)
-                .map((log, index) => (
-                  <li key={`${log.timestamp}-${log.playerName}`}>
-                    <LogList log={log} key={log.round + "-" + log.playerName} />
-                    {index === historyLog.length - 1 && (
-                      <button onClick={() => onClickUndoHandler(log.id)}>
-                        <IoArrowUndoSharp />
-                      </button>
-                    )}
-                  </li>
-                ))}
-            </ul>
-          </div>
           <div className="tools__players">
             {players.map((player) => (
               <div
@@ -327,7 +297,7 @@ const Game: FunctionComponent = () => {
                 </div>
               </div>
             ))}
-            {players.length < 8 && (
+            {players.length < 10 && (
               <PlayerInput
                 availableColors={getAvailableColors(players)}
                 availablePieces={getAvailablePieces(players)}
@@ -336,6 +306,23 @@ const Game: FunctionComponent = () => {
             )}
           </div>
         </div>
+      </div>
+      <div className="app__history">
+        <ul>
+          {historyLog
+            .sort((a, b) => b.round - a.round)
+            .map((log, index) => (
+              <li key={`${log.timestamp}-${log.playerName}`}>
+                <LogList log={log} key={log.round + "-" + log.playerName} />
+                {index === 0 && (
+                  <button onClick={() => onClickUndoHandler(log.id)}>
+                    <IoArrowUndoSharp />
+                  </button>
+                )}
+              </li>
+            ))}
+          <li>Welcome</li>
+        </ul>
       </div>
     </>
   );

@@ -53,7 +53,11 @@ const Tile: FunctionComponent<TileProps> = ({
               <img
                 src={`/pieces/piece_${player.piece}.png`}
                 alt={""}
-                style={{ background: player.color }}
+                style={{
+                  background: player.color,
+                }}
+                data-label="player-piece"
+                id={`piece-${player.name.toLowerCase()}-${player.piece.toLowerCase()}`}
               />
             </div>
           ))}

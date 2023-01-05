@@ -26,6 +26,7 @@ import updateLogsToFirebase from "../../helpers/updateLogsToFirebase";
 import restartGame from "../../helpers/restartGame";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import getLastHistory from "../../helpers/getLastHistory";
 
 const Game: FunctionComponent = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -98,7 +99,24 @@ const Game: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => setActivePlayer(undefined), 800);
+    setTimeout(() => {
+      if (!activePlayer) return;
+
+      const pieces = document.querySelectorAll<HTMLElement>(
+        '[data-label="player-piece"]'
+      );
+      pieces.forEach((piece) => {
+        piece.style.borderColor = "rgba(0,0,0,0)";
+      });
+      const activePiece = document.getElementById(
+        `piece-${activePlayer.name.toLowerCase()}-${activePlayer.piece.toLowerCase()}`
+      );
+      if (activePiece) {
+        activePiece.style.borderColor = "black";
+      }
+
+      setActivePlayer(undefined);
+    }, 500);
   }, [round]);
 
   const changeActivePlayer = (chosenPlayer: Player) =>
@@ -153,7 +171,6 @@ const Game: FunctionComponent = () => {
       const lastHistory = historyLog.filter(
         (log) => log.round === round - 1
       )[0];
-      console.log(historyLog);
       if (!lastHistory) {
         return <p>Choose next player</p>;
       }
@@ -248,6 +265,11 @@ const Game: FunctionComponent = () => {
                       tileNumber={parseInt(number)}
                       key={number}
                       historyByPlayer={getLastHistoryByPlayer(historyLog)}
+                      lastPlayer={
+                        getLastHistory(historyLog)
+                          ? getLastHistory(historyLog).playerName
+                          : undefined
+                      }
                     />
                   );
                 })}

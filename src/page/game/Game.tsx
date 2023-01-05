@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo } from "react";
 import { useEffect, useState, useRef } from "react";
 import _orderBy from "lodash/orderBy";
 import _sortBy from "lodash/sortBy";
@@ -145,11 +145,15 @@ const Game: FunctionComponent = () => {
       return <p>Add Players</p>;
     }
     if (historyLog.length > 0) {
+      const lastHistory = historyLog.sort((a, b) => b.round - a.round)[0];
+      if (!lastHistory) {
+        return <p>Choose next player</p>;
+      }
       return (
         <p>
-          {historyLog[0].playerName} rolled{" "}
-          <RolledDice currentDice={historyLog[0].dice} size={20} /> , moved to{" "}
-          {historyLog[0].to}
+          {lastHistory.playerName} rolled{" "}
+          <RolledDice currentDice={lastHistory.dice} size={20} /> , moved to{" "}
+          {lastHistory.to}
           <p>Choose next player</p>
         </p>
       );

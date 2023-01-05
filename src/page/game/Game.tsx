@@ -153,6 +153,7 @@ const Game: FunctionComponent = () => {
       const lastHistory = historyLog.filter(
         (log) => log.round === round - 1
       )[0];
+      console.log(historyLog);
       if (!lastHistory) {
         return <p>Choose next player</p>;
       }

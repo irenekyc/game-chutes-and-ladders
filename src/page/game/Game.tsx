@@ -98,7 +98,7 @@ const Game: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    setActivePlayer(undefined);
+    setTimeout(() => setActivePlayer(undefined), 800);
   }, [round]);
 
   const changeActivePlayer = (chosenPlayer: Player) =>

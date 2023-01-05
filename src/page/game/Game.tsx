@@ -90,12 +90,16 @@ const Game: FunctionComponent = () => {
     setHistoryLog(updatedHistoryLog);
     updateLogsToFirebase(updatedHistoryLog, round + 1, gameId);
     setRound(round + 1);
-    setActivePlayer(undefined);
+
     // scroll to bottom
     if (historyRef.current && historyListRef.current) {
       historyRef.current.scrollBy(0, 100);
     }
   };
+
+  useEffect(() => {
+    setActivePlayer(undefined);
+  }, [round]);
 
   const changeActivePlayer = (chosenPlayer: Player) =>
     setActivePlayer(chosenPlayer);

@@ -132,6 +132,7 @@ const Game: FunctionComponent = () => {
   };
 
   const renderAction = (): JSX.Element => {
+    if (!round) return <></>;
     if (activePlayer) {
       return (
         <>
@@ -149,7 +150,9 @@ const Game: FunctionComponent = () => {
       return <p>Add Players</p>;
     }
     if (historyLog.length > 0) {
-      const lastHistory = historyLog.sort((a, b) => b.round - a.round)[0];
+      const lastHistory = historyLog.filter(
+        (log) => log.round === round - 1
+      )[0];
       if (!lastHistory) {
         return <p>Choose next player</p>;
       }
